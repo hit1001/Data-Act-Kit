@@ -1,0 +1,52 @@
+{
+  "realm": "dataact",
+  "enabled": true,
+  "sslRequired": "external",
+  "registrationAllowed": false,
+  "bruteForceProtected": true,
+  "accessTokenLifespan": 300,
+  "requiredActions": [
+    { "alias": "CONFIGURE_TOTP", "name": "Configure OTP", "providerId": "CONFIGURE_TOTP", "enabled": true, "defaultAction": true, "priority": 10 }
+  ],
+  "clientScopes": [
+    {
+      "name": "api-audience",
+      "protocol": "openid-connect",
+      "attributes": { "include.in.token.scope": "false" },
+      "protocolMappers": [
+        { "name": "api-audience", "protocol": "openid-connect", "protocolMapper": "oidc-audience-mapper",
+          "config": { "included.custom.audience": "dataact-api", "access.token.claim": "true", "id.token.claim": "false" } }
+      ]
+    }
+  ],
+  "defaultDefaultClientScopes": ["api-audience", "basic"],
+  "clients": [
+    {
+      "clientId": "portal",
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": false,
+      "implicitFlowEnabled": false,
+      "redirectUris": ["${PUBLIC_BASE_URL}/callback"],
+      "webOrigins": ["${PUBLIC_BASE_URL}"],
+      "attributes": { "pkce.code.challenge.method": "S256", "post.logout.redirect.uris": "${PUBLIC_BASE_URL}/" },
+      "defaultClientScopes": ["api-audience", "basic"]
+    },
+    {
+      "clientId": "dak-admin",
+      "publicClient": false,
+      "secret": "${KC_DAK_ADMIN_SECRET}",
+      "serviceAccountsEnabled": true,
+      "standardFlowEnabled": false,
+      "directAccessGrantsEnabled": false
+    }
+  ],
+  "users": [
+    {
+      "username": "service-account-dak-admin",
+      "enabled": true,
+      "serviceAccountClientId": "dak-admin",
+      "clientRoles": { "realm-management": ["manage-clients", "view-users", "query-users"] }
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+{ "id": "data_use_agreement-fixture", "kind": "data_use_agreement", "version": "0", "language": "en-GB", "fixture": true, "title": "TEST FIXTURE — not legal text", "approvedBy": "test-suite", "approvedAt": "2026-01-01T00:00:00Z", "sections": [ { "heading": "Fixture", "body": "Between {{party.name}} and {{counterparty.name}}. Data points: {{datapoints.list}}." } ] }

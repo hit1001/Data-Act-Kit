@@ -1,0 +1,137 @@
+# Pilot stack (design §12). First run deploy/scripts/init-secrets.sh and fill the REQUIRED values in
+# deploy/app.env, then: docker compose -f deploy/docker-compose.yml up -d
+name: dataact-kit
+
+x-app: &app
+  build: { context: .., dockerfile: Dockerfile }
+  restart: unless-stopped
+  env_file: ./app.env
+  entrypoint: ["/bin/sh", "/scripts/app-entrypoint.sh"]
+  secrets: [kek, fingerprint, mqtt_service_password, keycloak_dak_admin_secret, db_password, mavt_api_key]
+  volumes:
+    - ./scripts/app-entrypoint.sh:/scripts/app-entrypoint.sh:ro
+    - ./secrets/certs/ca.crt:/certs/ca.crt:ro
+    - ../templates:/templates:ro
+    - ../config:/config:ro
+  depends_on:
+    migrate: { condition: service_completed_successfully }
+    mqtt-provision: { condition: service_completed_successfully }
+
+services:
+  db:
+    image: timescale/timescaledb:2.17.2-pg17
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: dak
+      POSTGRES_DB: dak
+      POSTGRES_PASSWORD_FILE: /run/secrets/db_password
+    secrets: [db_password]
+    volumes:
+      - db:/var/lib/postgresql/data
+      - ./scripts/create-keycloak-db.sh:/docker-entrypoint-initdb.d/10-keycloak.sh:ro
+    healthcheck: { test: ["CMD", "pg_isready", "-U", "dak"], interval: 5s, retries: 20 }
+
+  mqtt-init:
+    image: eclipse-mosquitto:2.0.20
+    entrypoint: ["/bin/sh", "/scripts/mqtt-provision.sh", "init"]
+    secrets: [mqtt_admin_password]
+    volumes: [mqtt:/mosquitto/data, ./scripts/mqtt-provision.sh:/scripts/mqtt-provision.sh:ro]
+
+  mosquitto:
+    image: eclipse-mosquitto:2.0.20
+    restart: unless-stopped
+    ports: ["8883:8883", "8884:8884"]
+    volumes:
+      - mqtt:/mosquitto/data
+      - ./mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+      - ./mosquitto/devices.acl:/mosquitto/config/devices.acl:ro
+      - ./secrets/certs/ca.crt:/mosquitto/certs/ca.crt:ro
+      - ./secrets/certs/broker.crt:/mosquitto/certs/broker.crt:ro
+      - ./secrets/certs/broker.key:/mosquitto/certs/broker.key:ro
+    depends_on: { mqtt-init: { condition: service_completed_successfully } }
+
+  mqtt-provision:
+    image: eclipse-mosquitto:2.0.20
+    entrypoint: ["/bin/sh", "/scripts/mqtt-provision.sh", "provision"]
+    secrets: [mqtt_admin_password, mqtt_service_password]
+    volumes: [./scripts/mqtt-provision.sh:/scripts/mqtt-provision.sh:ro, ./secrets/certs/ca.crt:/mosquitto/certs/ca.crt:ro]
+    depends_on: [mosquitto]
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.0.7
+    restart: unless-stopped
+    entrypoint: ["/bin/sh", "/scripts/keycloak-entrypoint.sh"]
+    ports: ["8081:8080"]
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://db:5432/keycloak
+      KC_DB_USERNAME: dak
+      KC_HTTP_ENABLED: "true"
+      KC_HOSTNAME: ${KC_HOSTNAME:-http://localhost:8081}
+      KC_HOSTNAME_BACKCHANNEL_DYNAMIC: "true"
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      PUBLIC_BASE_URL: ${PUBLIC_BASE_URL:-http://localhost:8080}
+    secrets: [db_password, keycloak_admin_password, keycloak_dak_admin_secret]
+    volumes:
+      - ./scripts/keycloak-entrypoint.sh:/scripts/keycloak-entrypoint.sh:ro
+      - ./keycloak/realm-dataact.json:/opt/keycloak/data/import/realm-dataact.json:ro
+    depends_on: { db: { condition: service_healthy } }
+
+  llm:
+    # llama.cpp OpenAI-compatible server (design §5.10). It has no route to the internet.
+    image: ${LLM_IMAGE:?set LLM_IMAGE to a pinned llama.cpp server image}
+    restart: unless-stopped
+    command: ["-m", "/models/${LLM_MODEL_FILE:?set LLM_MODEL_FILE}", "--host", "0.0.0.0", "--port", "8080", "-c", "8192", "--jinja"]
+    volumes: ["${LLM_MODELS_DIR:?set LLM_MODELS_DIR}:/models:ro"]
+    networks: [internal]
+
+  mavt:
+    # MAVT observes the LLM steps (design §5.10). Built from the sibling repository; reachable only on this host.
+    build: { context: ../../multiagent-visibility-tool }
+    restart: unless-stopped
+    environment: { VISIBILITY_HOST: 0.0.0.0, VISIBILITY_PORT: "4242" }
+    entrypoint: ["/bin/sh", "/scripts/mavt-entrypoint.sh"]
+    secrets: [mavt_password]
+    ports: ["127.0.0.1:4242:4242"]
+    volumes: [mavt:/data, ./scripts/mavt-entrypoint.sh:/scripts/mavt-entrypoint.sh:ro]
+    networks: [default, internal]
+
+  migrate:
+    <<: *app
+    restart: "no"
+    command: ["node", "packages/server/src/bin/migrate.ts"]
+    depends_on: { db: { condition: service_healthy } }
+
+  api:
+    <<: *app
+    command: ["node", "packages/server/src/bin/api.ts"]
+    ports: ["8080:8080"]
+    networks: [default, internal]
+
+  ingest:
+    <<: *app
+    command: ["node", "packages/server/src/bin/ingest.ts"]
+    healthcheck: { disable: true }
+
+  worker:
+    <<: *app
+    command: ["node", "packages/server/src/bin/worker.ts"]
+    healthcheck: { disable: true }
+    networks: [default, internal]
+
+networks:
+  default: {}
+  internal: { internal: true }
+
+volumes: { db: {}, mqtt: {}, mavt: {} }
+
+secrets:
+  kek: { file: ./secrets/kek.hex }
+  fingerprint: { file: ./secrets/fingerprint.hex }
+  db_password: { file: ./secrets/db_password }
+  mqtt_admin_password: { file: ./secrets/mqtt_admin_password }
+  mqtt_service_password: { file: ./secrets/mqtt_service_password }
+  keycloak_admin_password: { file: ./secrets/keycloak_admin_password }
+  keycloak_dak_admin_secret: { file: ./secrets/keycloak_dak_admin_secret }
+  mavt_password: { file: ./secrets/mavt_password }
+  mavt_api_key: { file: ./secrets/mavt_api_key }

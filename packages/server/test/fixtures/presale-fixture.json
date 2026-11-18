@@ -1,0 +1,9 @@
+{
+  "id": "presale-fixture", "kind": "presale_datasheet", "version": "0", "language": "en-GB", "fixture": true,
+  "title": "TEST FIXTURE — not legal text: {{model.name}}",
+  "approvedBy": "test-suite", "approvedAt": "2026-01-01T00:00:00Z",
+  "sections": [
+    { "heading": "Data", "body": "{{data.list}}\n\nVolume: {{data.estimated_volume_per_day}}. Real-time: {{data.realtime}}." },
+    { "heading": "Access", "body": "Portal {{access.portal_url}}, API {{access.api_url}}." }
+  ]
+}

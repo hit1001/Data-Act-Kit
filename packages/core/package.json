@@ -1,0 +1,6 @@
+{
+  "name": "@dak/core",
+  "private": true,
+  "type": "module",
+  "exports": { ".": "./src/index.ts" }
+}

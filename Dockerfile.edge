@@ -1,0 +1,14 @@
+# Edge connector image (design §5.1): read-only, outbound only. Builds for amd64 and arm64.
+FROM node:24.11.1-bookworm-slim
+WORKDIR /app
+COPY package.json package-lock.json ./
+COPY packages/core/package.json packages/core/
+COPY packages/server/package.json packages/server/
+COPY packages/edge/package.json packages/edge/
+RUN npm ci --omit=dev --workspace @dak/edge --include-workspace-root=false && npm cache clean --force
+COPY packages/core packages/core
+COPY packages/edge packages/edge
+RUN mkdir /queue && chown node:node /queue
+USER node
+VOLUME /queue
+CMD ["node", "packages/edge/src/bin/edge.ts"]

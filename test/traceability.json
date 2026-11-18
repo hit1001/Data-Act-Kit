@@ -1,0 +1,18 @@
+{
+  "R1":  ["R1 R2 R7 R9: catalogue import, review with flags, publish, pre-sale documents", "R1 R4 R7 R9: owner reads raw data with metadata; secrets and personal data withheld by default"],
+  "R2":  ["R1 R2 R7 R9: catalogue import, review with flags, publish, pre-sale documents", "templates: unfilled placeholders fail; fixtures load only when allowed; PDF is tagged PDF/UA"],
+  "R3":  ["R3: related-service notice once the legal officer records the Art. 3(3) facts"],
+  "R4":  ["R1 R4 R7 R9: owner reads raw data with metadata; secrets and personal data withheld by default", "customer reads own published data; secrets, personal data and drafts are excluded by default"],
+  "R5":  ["manual:docs/ui-review.md"],
+  "R6":  ["R6: machine linking with minimal evidence; devices; ingest with dedupe and quarantine", "R6: access log is minimal and pruned; deadline alerts fire at 50% and 90%"],
+  "R7":  ["property: trade secrets and personal data are only released with an NDA or legal basis", "R7 R9 R10: NDA and legal basis release data; maker use needs a data-use agreement"],
+  "R8":  ["R8: withholding produces a decision letter and an authority notice for approval", "request state machine and decision validation"],
+  "R9":  ["property: trade secrets and personal data are only released with an NDA or legal basis", "R7 R9 R10: NDA and legal basis release data; maker use needs a data-use agreement"],
+  "R10": ["maker internal use requires a data-use agreement and never releases personal data without a basis", "R7 R9 R10: NDA and legal basis release data; maker use needs a data-use agreement"],
+  "R11": ["property: recipients only read via an active, accepted, in-scope grant from the owner, never as a gatekeeper", "R12 R16: webhook and MQTT bridge deliver only granted data; signatures verify"],
+  "R12": ["R12 R13 R14 R15: grants with Art. 9 quote, gatekeeper refused, terms required", "R12 R16: webhook and MQTT bridge deliver only granted data; signatures verify"],
+  "R13": ["R12 R13 R14 R15: grants with Art. 9 quote, gatekeeper refused, terms required", "gatekeeper list must be sourced and dated; matching by name or group identifier"],
+  "R14": ["R12 R13 R14 R15: grants with Art. 9 quote, gatekeeper refused, terms required"],
+  "R15": ["Art. 9 compensation: cost cap for SMEs, itemised basis otherwise", "R12 R13 R14 R15: grants with Art. 9 quote, gatekeeper refused, terms required"],
+  "R16": ["R12 R16: webhook and MQTT bridge deliver only granted data; signatures verify", "revoking a grant ends live streams and access at once"]
+}

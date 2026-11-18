@@ -1,0 +1,12 @@
+{
+  "name": "@dak/edge",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "mqtt": "^5.16.1",
+    "node-opcua": "^2.187.31"
+  }
+}

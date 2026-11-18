@@ -1,0 +1,40 @@
+# Infrastructure for the integration tests (npm run test:it): the real database and broker, with the
+# same broker configuration as production. The application runs in-process inside the tests.
+name: dak-it
+
+services:
+  db:
+    image: timescale/timescaledb:2.17.2-pg17
+    environment: { POSTGRES_USER: dak, POSTGRES_DB: dak, POSTGRES_PASSWORD: it-only }
+    ports: ["127.0.0.1:55432:5432"]
+    healthcheck: { test: ["CMD", "pg_isready", "-U", "dak"], interval: 2s, retries: 30 }
+    tmpfs: [/var/lib/postgresql/data]
+
+  mqtt-init:
+    image: eclipse-mosquitto:2.0.20
+    entrypoint: ["/bin/sh", "/scripts/mqtt-provision.sh", "init"]
+    volumes: [mqtt:/mosquitto/data, ./scripts/mqtt-provision.sh:/scripts/mqtt-provision.sh:ro, "${IT_SECRETS:?}/mqtt_admin_password:/run/secrets/mqtt_admin_password:ro"]
+
+  mosquitto:
+    image: eclipse-mosquitto:2.0.20
+    ports: ["127.0.0.1:58883:8883", "127.0.0.1:58884:8884"]
+    volumes:
+      - mqtt:/mosquitto/data
+      - ./mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+      - ./mosquitto/devices.acl:/mosquitto/config/devices.acl:ro
+      - ${IT_SECRETS}/certs/ca.crt:/mosquitto/certs/ca.crt:ro
+      - ${IT_SECRETS}/certs/broker.crt:/mosquitto/certs/broker.crt:ro
+      - ${IT_SECRETS}/certs/broker.key:/mosquitto/certs/broker.key:ro
+    depends_on: { mqtt-init: { condition: service_completed_successfully } }
+
+  mqtt-provision:
+    image: eclipse-mosquitto:2.0.20
+    entrypoint: ["/bin/sh", "/scripts/mqtt-provision.sh", "provision"]
+    volumes:
+      - ./scripts/mqtt-provision.sh:/scripts/mqtt-provision.sh:ro
+      - ${IT_SECRETS}/certs/ca.crt:/mosquitto/certs/ca.crt:ro
+      - ${IT_SECRETS}/mqtt_admin_password:/run/secrets/mqtt_admin_password:ro
+      - ${IT_SECRETS}/mqtt_service_password:/run/secrets/mqtt_service_password:ro
+    depends_on: [mosquitto]
+
+volumes: { mqtt: {} }

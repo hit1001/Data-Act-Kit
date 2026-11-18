@@ -1,0 +1,8 @@
+node_modules/
+deploy/secrets/
+*.log
+.env
+unit.tap
+it.tap
+traceability-matrix.md
+config/gatekeepers.json

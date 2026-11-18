@@ -1,0 +1,10 @@
+{
+  "deviceId": "dev-1",
+  "broker": { "url": "mqtts://kit.example.com:8883", "caFile": "/certs/ca.crt", "certFile": "/certs/device.crt", "keyFile": "/certs/device.key" },
+  "source": { "kind": "opcua", "endpoint": "opc.tcp://192.168.10.20:4840", "securityMode": "SignAndEncrypt", "securityPolicy": "http://opcfoundation.org/UA/SecurityPolicy#Basic256Sha256",
+              "user": { "name": "readonly", "passwordFile": "/run/secrets/opcua_password" } },
+  "points": [ { "datapointId": "<datapoint uuid from the catalogue>", "source": "ns=3;s=\"DB1\".\"Temperature\"", "samplingMs": 1000 } ],
+  "queue": { "dir": "/queue", "maxAgeDays": 7 },
+  "flushMs": 1000,
+  "maxBatch": 500
+}

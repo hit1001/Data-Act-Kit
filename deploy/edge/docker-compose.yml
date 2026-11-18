@@ -1,0 +1,12 @@
+# Runs on an industrial PC in the factory network. Outbound only; nothing listens.
+name: dataact-edge
+services:
+  edge:
+    build: { context: ../.., dockerfile: Dockerfile.edge }
+    restart: unless-stopped
+    environment: { EDGE_CONFIG: /config/edge.json }
+    volumes:
+      - ./edge.json:/config/edge.json:ro
+      - ./certs:/certs:ro
+      - queue:/queue
+volumes: { queue: {} }

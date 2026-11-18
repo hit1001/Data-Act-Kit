@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Machine data access</title>
+<link rel="stylesheet" href="/theme.css">
+<style>
+body{display:grid;grid-template-rows:48px 1fr;height:100vh;overflow:hidden}
+header{display:flex;align-items:center;gap:8px;padding:0 16px;background:var(--surface);border-bottom:1px solid var(--line)}
+header strong{flex:1;font-weight:600}
+.layout{display:grid;grid-template-columns:220px minmax(0,1fr);min-height:0}
+nav{padding:12px 8px;background:var(--surface);border-right:1px solid var(--line);overflow:auto}
+nav button{display:block;width:100%;padding:7px 10px;border:0;border-radius:var(--r);background:transparent;text-align:left;cursor:pointer}
+nav button:hover,nav button[aria-current="page"]{background:var(--raised)}
+main{padding:20px 24px;overflow:auto}
+main h1{font-size:18px;font-weight:600;margin-bottom:12px}
+main h2{font-size:14px;font-weight:600;margin:20px 0 8px}
+form.inline{display:flex;flex-wrap:wrap;gap:8px;align-items:flex-end;margin:8px 0 16px}
+form.inline .field{margin:0;min-width:160px}
+.row{display:flex;gap:6px}
+.note{color:var(--text-2);margin:6px 0 12px}
+.err{color:var(--err)}
+pre{font-family:var(--mono);font-size:12px;white-space:pre-wrap;background:var(--raised);padding:10px;border-radius:var(--r);max-height:320px;overflow:auto}
+</style>
+</head>
+<body>
+<header><strong>Machine data access</strong><span id="who" class="muted"></span><button class="btn btn-ghost" id="logout" hidden>Sign out</button></header>
+<div class="layout"><nav id="nav" aria-label="Sections"></nav><main id="main"><p class="note">Loading…</p></main></div>
+<div class="toasts" id="toasts" aria-live="polite"></div>
+<script type="module" src="/app.js"></script>
+</body>
+</html>
