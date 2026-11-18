@@ -1,0 +1,66 @@
+Data Act Kit is dual-licensed.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+LICENSE A — MIT (Free for individuals and small teams)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Copyright (c) 2026 Data Act Kit contributors
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+Applies to:
+  - Individual developers (personal projects)
+  - Teams of fewer than 10 people
+  - Open source projects
+  - Non-commercial use and evaluation
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+LICENSE B — Commercial License (Required for commercial use)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+A commercial license is required if ANY of the following apply:
+
+  1. Your organisation has 10 or more people
+  2. You use Data Act Kit in a product or service that generates revenue
+  3. You offer Data Act Kit as a hosted or managed service
+  4. You integrate Data Act Kit into a commercial product
+
+To purchase or request a free trial:
+  → Open an issue on GitHub: https://github.com/hit1001/Data-Act-Kit/issues
+
+Using Data Act Kit commercially without a valid license is a
+violation of this agreement.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+THIRD-PARTY CODE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+packages/server/vendor/mavt-sdk.cjs and the portal's theme.css and icons.svg
+come from MAVT (https://github.com/hit1001/multiagent-visibility-tool) and
+remain under MAVT's own license. Dependencies installed through npm and the
+container images used by the deployment are under their own licenses.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SUMMARY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Individual / open source / evaluation  →  MIT (free)
+  Commercial / team / enterprise         →  Commercial license required
+
+Questions? Open an issue on GitHub.

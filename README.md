@@ -14,6 +14,7 @@
   <img alt="Node.js 24+" src="https://img.shields.io/badge/node-%E2%89%A524-339933?style=flat-square&logo=node.js&logoColor=white" />
   <img alt="TypeScript strict" src="https://img.shields.io/badge/TypeScript-strict-3178C6?style=flat-square&logo=typescript&logoColor=white" />
   <img alt="Regulation (EU) 2023/2854" src="https://img.shields.io/badge/EU-2023%2F2854-003399?style=flat-square" />
+  <a href="./LICENSE"><img alt="Dual license" src="https://img.shields.io/badge/license-dual--licensed-blue?style=flat-square" /></a>
 </p>
 
 <p align="center">
@@ -205,6 +206,19 @@ npm run check
 
 Keep `packages/core` free of I/O, add a test named after its requirement id for every rule you
 change, and map it in `test/traceability.json`.
+
+## 📄 License
+
+Data Act Kit is distributed under a **dual-license arrangement** (see [LICENSE](./LICENSE)):
+
+- **Free (MIT terms):** individuals, teams under 10 people, open-source projects and evaluation.
+- **Commercial licence:** organisations of 10 or more people, or use in a revenue-generating
+  product or hosted service. To get one, [open an issue](https://github.com/hit1001/Data-Act-Kit/issues).
+
+**Please review the actual license before using Data Act Kit commercially.** Its additional
+restrictions mean the project should not be described as unmodified MIT-licensed or OSI-approved
+open-source software. Files taken from [MAVT](https://github.com/hit1001/multiagent-visibility-tool)
+remain under MAVT's license.
 
 ## ⚠️ Disclaimer
 
