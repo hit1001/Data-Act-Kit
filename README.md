@@ -28,7 +28,7 @@
 
 ---
 
-> **From 12 September 2025, machine data belongs to the people who use the machine as well as the maker.**
+> **From 12 September 2026, machine data belongs to the people who use the machine as well as the maker.**
 
 The EU Data Act (Regulation (EU) 2023/2854) obliges makers of connected products to describe the
 data their machines produce. Customers must be able to get that data without undue delay, and so
